@@ -12,7 +12,7 @@ export class ShapiWaitFileUpdated implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'SHAPI Wait File Updated',
 		name: 'shapiWaitFileUpdated',
-		icon: 'file:shapi.svg',
+		icon: 'file:shapi2.svg',
 		group: ['SHAPI'],
 		version: 1,
 		description: 'Wait until a specific file is created or updated via SHAPI',
@@ -40,6 +40,14 @@ export class ShapiWaitFileUpdated implements INodeType {
 				description: 'The path to the file to wait for creation or update',
 				required: true,
 			},
+			{
+				displayName: 'Timeout',
+				name: 'timeout',
+				type: 'number',
+				default: 100,
+				description: 'Timeout in seconds for waiting for file update',
+				required: false,
+			},
 		],
 	};
 
@@ -51,9 +59,11 @@ export class ShapiWaitFileUpdated implements INodeType {
 			try {
 				const shapiUrl = this.getNodeParameter('shapiUrl', i) as string;
 				const filePath = this.getNodeParameter('filePath', i) as string;
+				const timeout = this.getNodeParameter('timeout', i) as number;
 
 				const body = {
-					file_path: filePath,
+					filepath: filePath,
+					timeout: timeout,
 				};
 
 				const responseData = await shapiApiRequest.call(this, 'POST', shapiUrl, '/wait_file_updated', body);

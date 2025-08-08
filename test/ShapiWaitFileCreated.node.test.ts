@@ -48,14 +48,15 @@ describe('ShapiWaitFileCreated', () => {
 		it('should wait for file creation successfully', async () => {
 			const mockResponse = {
 				status: 'file_created',
-				file_path: '/tmp/test.txt',
+				filepath: '/tmp/test.txt',
 				timestamp: '2024-01-01T12:00:00Z',
 				elapsed_time: 2.5
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/test.txt'
+				filePath: '/tmp/test.txt',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -67,7 +68,7 @@ describe('ShapiWaitFileCreated', () => {
 				'POST',
 				'http://localhost:3000',
 				'/wait_file_created',
-				{ file_path: '/tmp/test.txt' }
+				{ filepath: '/tmp/test.txt', timeout: 100 }
 			);
 
 			expect(result).toEqual([
@@ -83,13 +84,14 @@ describe('ShapiWaitFileCreated', () => {
 		it('should handle absolute file paths', async () => {
 			const mockResponse = {
 				status: 'file_created',
-				file_path: '/home/user/documents/report.pdf',
+				filepath: '/home/user/documents/report.pdf',
 				timestamp: '2024-01-01T12:00:00Z'
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/home/user/documents/report.pdf'
+				filePath: '/home/user/documents/report.pdf',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -101,20 +103,21 @@ describe('ShapiWaitFileCreated', () => {
 				'POST',
 				'http://localhost:3000',
 				'/wait_file_created',
-				{ file_path: '/home/user/documents/report.pdf' }
+				{ filepath: '/home/user/documents/report.pdf', timeout: 100 }
 			);
 		});
 
 		it('should handle relative file paths', async () => {
 			const mockResponse = {
 				status: 'file_created',
-				file_path: './output/data.json',
+				filepath: './output/data.json',
 				timestamp: '2024-01-01T12:00:00Z'
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: './output/data.json'
+				filePath: './output/data.json',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -126,20 +129,21 @@ describe('ShapiWaitFileCreated', () => {
 				'POST',
 				'http://localhost:3000',
 				'/wait_file_created',
-				{ file_path: './output/data.json' }
+				{ filepath: './output/data.json', timeout: 100 }
 			);
 		});
 
 		it('should handle multiple input items', async () => {
 			const mockResponse = {
 				status: 'file_created',
-				file_path: '/tmp/test.txt',
+				filepath: '/tmp/test.txt',
 				timestamp: '2024-01-01T12:00:00Z'
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/test.txt'
+				filePath: '/tmp/test.txt',
+				timeout: 100
 			};
 
 			const inputData = createMockInputData([{ id: 1 }, { id: 2 }]);
@@ -157,14 +161,15 @@ describe('ShapiWaitFileCreated', () => {
 		it('should handle timeout scenarios', async () => {
 			const mockResponse = {
 				status: 'timeout',
-				file_path: '/tmp/never_created.txt',
+				filepath: '/tmp/never_created.txt',
 				elapsed_time: 30.0,
 				message: 'File was not created within timeout period'
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/never_created.txt'
+				filePath: '/tmp/never_created.txt',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -180,7 +185,8 @@ describe('ShapiWaitFileCreated', () => {
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/test.txt'
+				filePath: '/tmp/test.txt',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -199,7 +205,8 @@ describe('ShapiWaitFileCreated', () => {
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/test.txt'
+				filePath: '/tmp/test.txt',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -212,7 +219,7 @@ describe('ShapiWaitFileCreated', () => {
 		it('should handle different SHAPI URL formats', async () => {
 			const mockResponse = { 
 				status: 'file_created', 
-				file_path: '/test.txt',
+				filepath: '/test.txt',
 				timestamp: '2024-01-01T12:00:00Z'
 			};
 
@@ -226,7 +233,8 @@ describe('ShapiWaitFileCreated', () => {
 			for (const url of testUrls) {
 				const mockParameters = {
 					shapiUrl: url,
-					filePath: '/test.txt'
+					filePath: '/test.txt',
+					timeout: 100
 				};
 
 				mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -238,7 +246,7 @@ describe('ShapiWaitFileCreated', () => {
 					'POST',
 					url,
 					'/wait_file_created',
-					{ file_path: '/test.txt' }
+					{ filepath: '/test.txt', timeout: 100 }
 				);
 			}
 		});
@@ -246,13 +254,14 @@ describe('ShapiWaitFileCreated', () => {
 		it('should handle files with special characters in path', async () => {
 			const mockResponse = {
 				status: 'file_created',
-				file_path: '/tmp/file with spaces & special-chars_123.txt',
+				filepath: '/tmp/file with spaces & special-chars_123.txt',
 				timestamp: '2024-01-01T12:00:00Z'
 			};
 
 			const mockParameters = {
 				shapiUrl: 'http://localhost:3000',
-				filePath: '/tmp/file with spaces & special-chars_123.txt'
+				filePath: '/tmp/file with spaces & special-chars_123.txt',
+				timeout: 100
 			};
 
 			mockExecuteFunctions = createMockExecuteFunctions(mockParameters);
@@ -264,7 +273,7 @@ describe('ShapiWaitFileCreated', () => {
 				'POST',
 				'http://localhost:3000',
 				'/wait_file_created',
-				{ file_path: '/tmp/file with spaces & special-chars_123.txt' }
+				{ filepath: '/tmp/file with spaces & special-chars_123.txt', timeout: 100 }
 			);
 		});
 	});
