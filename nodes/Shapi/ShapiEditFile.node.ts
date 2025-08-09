@@ -103,12 +103,22 @@ export class ShapiEditFile implements INodeType {
 
 				const responseData = await shapiApiRequest.call(this, 'POST', shapiUrl, '/execute', body);
 
+				// Create a curl command for direct SHAPI execution
+				const curlCommand = `curl -X POST "${shapiUrl}/execute" -H "Content-Type: application/json" -d '${JSON.stringify(body)}'`;
+
 				returnData.push({
 					json: {
 						...responseData,
 						filePath: filePath,
 						fileUrl: `file://${filePath}`,
 						editorCommand: command,
+						curlCommand: curlCommand,
+						shapiRequest: {
+							url: `${shapiUrl}/execute`,
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: body
+						},
 						editSession: {
 							file: filePath,
 							editor: 'gvim',
