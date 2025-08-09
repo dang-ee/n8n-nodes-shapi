@@ -99,8 +99,6 @@ describe('ShapiOpenInGvim', () => {
 
 			// Copy the instance methods to the mock context
 			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json).toMatchObject({
@@ -145,8 +143,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json.gvimCommand).toBe('gvim +"call cursor(42, 15)" -- \'/home/user/code.js\'');
@@ -168,8 +164,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json.gvimCommand).toBe('gvim +25 -- \'/home/user/readme.md\'');
@@ -191,8 +185,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json.gvimCommand).toBe('gvim +"set fileencoding=euc-kr" -- \'/tmp/korean.txt\'');
@@ -214,8 +206,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json.gvimCommand).toBe('mkdir -p "/tmp/new/dir" && touch "/tmp/new/dir/newfile.txt" && gvim -- \'/tmp/new/dir/newfile.txt\'');
@@ -238,8 +228,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0][0]?.json.gvimCommand).toBe('gvim +"call cursor(100, 50)" +"set fileencoding=utf-8" -- \'/home/user/My Documents/file with spaces.txt\'');
@@ -264,8 +252,6 @@ describe('ShapiOpenInGvim', () => {
 			const mockBinaryData = { data: Buffer.from('mock html') };
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0]).toHaveLength(2);
@@ -289,8 +275,6 @@ describe('ShapiOpenInGvim', () => {
 			(mockExecuteFunctions.continueOnFail as jest.Mock).mockReturnValue(true);
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockRejectedValue(new Error('Binary data error'));
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(result[0]).toHaveLength(1);
@@ -315,8 +299,6 @@ describe('ShapiOpenInGvim', () => {
 			(mockExecuteFunctions.continueOnFail as jest.Mock).mockReturnValue(false);
 			(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockRejectedValue(new Error('Binary data error'));
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			await expect(shapiOpenInGvim.execute.call(mockExecuteFunctions)).rejects.toThrow('Binary data error');
 		});
 	});
@@ -353,9 +335,7 @@ describe('ShapiOpenInGvim', () => {
 				const mockBinaryData = { data: Buffer.from('mock html') };
 				(mockExecuteFunctions.helpers.prepareBinaryData as jest.Mock).mockResolvedValue(mockBinaryData);
 
-				// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
-			const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
+				const result = await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 				expect(result[0][0]?.json.gvimCommand).toBe(expectedCommands[i]);
 			}
 		});
@@ -382,8 +362,6 @@ describe('ShapiOpenInGvim', () => {
 				return { data: buffer };
 			});
 
-			// Copy the instance methods to the mock context
-			Object.setPrototypeOf(mockExecuteFunctions, shapiOpenInGvim);
 			await shapiOpenInGvim.execute.call(mockExecuteFunctions);
 
 			expect(capturedHtml).toContain('<!doctype html>');
