@@ -13,6 +13,10 @@ export function createMockExecuteFunctions(
 		continueOnFail: jest.fn().mockReturnValue(false),
 		helpers: {
 			request: jest.fn().mockResolvedValue({ success: true }),
+			prepareBinaryData: jest.fn().mockResolvedValue({
+				data: Buffer.from('mock binary data'),
+				mimeType: 'application/octet-stream',
+			}),
 		},
 		getNode: jest.fn().mockReturnValue({
 			name: 'Test Node',
