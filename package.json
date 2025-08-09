@@ -34,6 +34,7 @@
     "n8nNodesApiVersion": 1,
     "nodes": [
       "dist/nodes/Shapi/ShapiExecute.node.js",
+      "dist/nodes/Shapi/ShapiEditFile.node.js",
       "dist/nodes/Shapi/ShapiWaitFileCreated.node.js",
       "dist/nodes/Shapi/ShapiWaitFileUpdated.node.js"
     ]
