@@ -68,7 +68,7 @@ describe('ShapiEditFile', () => {
 			expect(result[0][0]?.json).toEqual({
 				filePath: '/tmp/test.txt',
 				editor: 'gvim',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Ftmp%2Ftest.txt'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/tmp/test.txt'
 			});
 			// displayEnv should not be included in response when empty
 			expect(result[0][0]?.json.displayEnv).toBeUndefined();
@@ -89,7 +89,7 @@ describe('ShapiEditFile', () => {
 				filePath: '/tmp/test.txt',
 				editor: 'gvim',
 				displayEnv: ':0',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Ftmp%2Ftest.txt&env=DISPLAY=%3A0'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/tmp/test.txt&env=DISPLAY=%3A0'
 			});
 		});
 
@@ -108,7 +108,7 @@ describe('ShapiEditFile', () => {
 				filePath: '/home/user/document.txt',
 				editor: 'gvim',
 				displayEnv: ':1',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Fhome%2Fuser%2Fdocument.txt&env=DISPLAY=%3A1'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/home/user/document.txt&env=DISPLAY=%3A1'
 			});
 		});
 
@@ -126,7 +126,7 @@ describe('ShapiEditFile', () => {
 			expect(result[0][0]?.json).toEqual({
 				filePath: '/home/user/My Documents/file with spaces.txt',
 				editor: 'gvim',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Fhome%2Fuser%2FMy%20Documents%2Ffile%20with%20spaces.txt'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/home/user/My%20Documents/file%20with%20spaces.txt'
 			});
 		});
 
@@ -144,7 +144,7 @@ describe('ShapiEditFile', () => {
 			expect(result[0][0]?.json).toEqual({
 				filePath: '/tmp/test.txt',
 				editor: 'gvim',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Ftmp%2Ftest.txt'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/tmp/test.txt'
 			});
 			expect(result[0][0]?.json.displayEnv).toBeUndefined();
 		});
@@ -219,7 +219,8 @@ describe('ShapiEditFile', () => {
 
 				expect(result[0][0]?.json.filePath).toBe(testCase.filePath);
 				expect(result[0][0]?.json.displayEnv).toBe(testCase.displayEnv);
-				expect(result[0][0]?.json.openUrl).toBe(`http://localhost:3000/open_file?tool=gvim&file=${encodeURIComponent(testCase.filePath)}&env=DISPLAY=${encodeURIComponent(testCase.displayEnv)}`);
+				const encodedPath = testCase.filePath.split('/').map(part => encodeURIComponent(part)).join('/');
+				expect(result[0][0]?.json.openUrl).toBe(`http://localhost:3000/open_file?tool=gvim&file=${encodedPath}&env=DISPLAY=${encodeURIComponent(testCase.displayEnv)}`);
 			}
 		});
 
@@ -244,7 +245,8 @@ describe('ShapiEditFile', () => {
 
 				expect(result[0][0]?.json.filePath).toBe(filePath);
 				expect(result[0][0]?.json.displayEnv).toBeUndefined();
-				expect(result[0][0]?.json.openUrl).toBe(`http://localhost:3000/open_file?tool=gvim&file=${encodeURIComponent(filePath)}`);
+				const encodedPath = filePath.split('/').map(part => encodeURIComponent(part)).join('/');
+				expect(result[0][0]?.json.openUrl).toBe(`http://localhost:3000/open_file?tool=gvim&file=${encodedPath}`);
 			}
 		});
 
@@ -262,7 +264,7 @@ describe('ShapiEditFile', () => {
 			expect(result[0][0]?.json).toEqual({
 				filePath: '/manual/path/file.txt',
 				editor: 'gvim',
-				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=%2Fmanual%2Fpath%2Ffile.txt'
+				openUrl: 'http://localhost:3000/open_file?tool=gvim&file=/manual/path/file.txt'
 			});
 		});
 	});

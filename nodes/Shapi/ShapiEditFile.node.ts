@@ -122,10 +122,12 @@ export class ShapiEditFile implements INodeType {
 									const filename = parts.slice(8).join(' ');
 									const fullPath = fileDirectory === '.' ? filename : `${fileDirectory}/${filename}`;
 									
+									// Encode file path but preserve forward slashes
+									const encodedPath = fullPath.split('/').map((part: string) => encodeURIComponent(part)).join('/');
 									results.push({
 										name: filename,
 										value: fullPath,
-										url: `${shapiUrl}/open_file?tool=gvim&file=${encodeURIComponent(fullPath)}`,
+										url: `${shapiUrl}/open_file?tool=gvim&file=${encodedPath}`,
 									});
 								}
 							}
@@ -170,7 +172,9 @@ export class ShapiEditFile implements INodeType {
 				}
 
 				// Build URL with optional display environment
-				let openUrl = `${shapiUrl}/open_file?tool=gvim&file=${encodeURIComponent(filePath)}`;
+				// Encode file path but preserve forward slashes
+				const encodedFilePath = filePath.split('/').map((part: string) => encodeURIComponent(part)).join('/');
+				let openUrl = `${shapiUrl}/open_file?tool=gvim&file=${encodedFilePath}`;
 				if (displayEnv && displayEnv.trim()) {
 					openUrl += `&env=DISPLAY=${encodeURIComponent(displayEnv)}`;
 				}
