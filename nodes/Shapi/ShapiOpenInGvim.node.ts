@@ -6,7 +6,7 @@ import {
 	NodeConnectionType,
 } from 'n8n-workflow';
 
-import { shapiApiRequest } from './GenericFunctions';
+import { shapiApiRequest, getShapiUrl } from './GenericFunctions';
 
 // Global helper functions
 function buildGvimCommand(
@@ -178,6 +178,12 @@ export class ShapiOpenInGvim implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
+		credentials: [
+			{
+				name: 'shapiApi',
+				required: true,
+			},
+		],
 		hints: [
 			{
 				type: 'info',
@@ -185,19 +191,10 @@ export class ShapiOpenInGvim implements INodeType {
 				whenToDisplay: 'always',
 				message:
 					'After execution, open the generated <b>helper HTML</b> in the output and click <b>Open in gVim</b>.\n' +
-					'Your SHAPI server must be running and accessible at the specified URL.',
+					'Your SHAPI server must be running and accessible.',
 			},
 		],
 		properties: [
-			{
-				displayName: 'SHAPI URL',
-				name: 'shapiUrl',
-				type: 'string',
-				default: '',
-				placeholder: 'http://localhost:3000',
-				description: 'The SHAPI server URL',
-				required: true,
-			},
 			{
 				displayName: 'File Path',
 				name: 'filePath',
@@ -258,7 +255,7 @@ export class ShapiOpenInGvim implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const shapiUrl = this.getNodeParameter('shapiUrl', i) as string;
+				const shapiUrl = await getShapiUrl(this);
 				const filePath = this.getNodeParameter('filePath', i) as string;
 				const line = this.getNodeParameter('line', i) as number;
 				const column = this.getNodeParameter('column', i) as number;

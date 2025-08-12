@@ -9,7 +9,7 @@ import {
 	NodeConnectionType,
 } from 'n8n-workflow';
 
-import { shapiApiRequest } from './GenericFunctions';
+import { shapiApiRequest, getShapiUrl } from './GenericFunctions';
 
 export class ShapiEditFile implements INodeType {
 	description: INodeTypeDescription = {
@@ -24,16 +24,13 @@ export class ShapiEditFile implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
-		properties: [
+		credentials: [
 			{
-				displayName: 'SHAPI URL',
-				name: 'shapiUrl',
-				type: 'string',
-				default: '',
-				placeholder: 'http://localhost:3000',
-				description: 'The SHAPI server URL',
+				name: 'shapiApi',
 				required: true,
 			},
+		],
+		properties: [
 			{
 				displayName: 'File Directory',
 				name: 'fileDirectory',
@@ -88,7 +85,7 @@ export class ShapiEditFile implements INodeType {
 				this: ILoadOptionsFunctions,
 				filter?: string,
 			): Promise<INodeListSearchResult> {
-				const shapiUrl = this.getNodeParameter('shapiUrl') as string;
+				const shapiUrl = await getShapiUrl(this);
 				const fileDirectory = this.getNodeParameter('fileDirectory', '.') as string;
 				
 				try {
@@ -105,7 +102,7 @@ export class ShapiEditFile implements INodeType {
 						timeout: 30,
 					};
 
-					const responseData = await shapiApiRequest.call(this, 'POST', shapiUrl, '/execute', body);
+					const responseData = await shapiApiRequest.call(this, 'POST', '/execute', body);
 					
 					const results: INodeListSearchItems[] = [];
 					
@@ -155,7 +152,7 @@ export class ShapiEditFile implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const shapiUrl = this.getNodeParameter('shapiUrl', i) as string;
+				const shapiUrl = await getShapiUrl(this);
 				const filePathResource = this.getNodeParameter('filePath', i) as any;
 				const displayEnv = this.getNodeParameter('displayEnv', i) as string;
 

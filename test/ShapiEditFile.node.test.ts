@@ -3,7 +3,10 @@ import { IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
 import { createMockExecuteFunctions, createMockInputData } from './helpers/mockExecuteFunctions';
 import * as GenericFunctions from '../nodes/Shapi/GenericFunctions';
 
-jest.mock('../nodes/Shapi/GenericFunctions');
+jest.mock('../nodes/Shapi/GenericFunctions', () => ({
+	shapiApiRequest: jest.fn(),
+	getShapiUrl: jest.fn().mockResolvedValue('http://localhost:3000'),
+}));
 
 describe('ShapiEditFile', () => {
 	let shapiEditFile: ShapiEditFile;
@@ -28,13 +31,13 @@ describe('ShapiEditFile', () => {
 			expect(shapiEditFile.description.outputs).toEqual(['main']);
 		});
 
-		it('should have required properties for SHAPI URL and file path', () => {
+		it('should have required credential and file path property', () => {
 			const properties = shapiEditFile.description.properties;
+			const credentials = shapiEditFile.description.credentials;
 			
-			const shapiUrlProperty = properties.find(p => p.name === 'shapiUrl');
-			expect(shapiUrlProperty).toBeDefined();
-			expect(shapiUrlProperty?.required).toBe(true);
-			expect(shapiUrlProperty?.type).toBe('string');
+			const shapiCredential = credentials?.find(c => c.name === 'shapiApi');
+			expect(shapiCredential).toBeDefined();
+			expect(shapiCredential?.required).toBe(true);
 
 			const filePathProperty = properties.find(p => p.name === 'filePath');
 			expect(filePathProperty).toBeDefined();
@@ -56,7 +59,6 @@ describe('ShapiEditFile', () => {
 	describe('execute', () => {
 		it('should return file info without display env when not specified', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
 				filePath: { mode: 'list', value: '/tmp/test.txt' },
 				displayEnv: ''
 			};
@@ -76,8 +78,7 @@ describe('ShapiEditFile', () => {
 
 		it('should include display environment when specified', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '/tmp/test.txt' },
+								filePath: { mode: 'list', value: '/tmp/test.txt' },
 				displayEnv: ':0'
 			};
 
@@ -95,8 +96,7 @@ describe('ShapiEditFile', () => {
 
 		it('should include display environment in response', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '/home/user/document.txt' },
+								filePath: { mode: 'list', value: '/home/user/document.txt' },
 				displayEnv: ':1'
 			};
 
@@ -114,8 +114,7 @@ describe('ShapiEditFile', () => {
 
 		it('should handle file paths with spaces correctly', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '/home/user/My Documents/file with spaces.txt' },
+								filePath: { mode: 'list', value: '/home/user/My Documents/file with spaces.txt' },
 				displayEnv: ''
 			};
 
@@ -132,8 +131,7 @@ describe('ShapiEditFile', () => {
 
 		it('should handle whitespace-only display env as empty', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '/tmp/test.txt' },
+								filePath: { mode: 'list', value: '/tmp/test.txt' },
 				displayEnv: '   '
 			};
 
@@ -151,8 +149,7 @@ describe('ShapiEditFile', () => {
 
 		it('should handle multiple input items', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '/tmp/test.txt' },
+								filePath: { mode: 'list', value: '/tmp/test.txt' },
 				displayEnv: ''
 			};
 
@@ -168,8 +165,7 @@ describe('ShapiEditFile', () => {
 
 		it('should handle missing file path gracefully when continueOnFail is true', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '' },
+								filePath: { mode: 'list', value: '' },
 				displayEnv: ''
 			};
 
@@ -187,8 +183,7 @@ describe('ShapiEditFile', () => {
 
 		it('should throw error when file path missing and continueOnFail is false', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'list', value: '' },
+								filePath: { mode: 'list', value: '' },
 				displayEnv: ''
 			};
 
@@ -208,8 +203,7 @@ describe('ShapiEditFile', () => {
 
 			for (const testCase of testCases) {
 				const mockParameters = {
-					shapiUrl: 'http://localhost:3000',
-					filePath: { mode: 'list', value: testCase.filePath },
+										filePath: { mode: 'list', value: testCase.filePath },
 					displayEnv: testCase.displayEnv
 				};
 
@@ -234,8 +228,7 @@ describe('ShapiEditFile', () => {
 
 			for (const filePath of testCases) {
 				const mockParameters = {
-					shapiUrl: 'http://localhost:3000',
-					filePath: { mode: 'list', value: filePath },
+										filePath: { mode: 'list', value: filePath },
 					displayEnv: ''
 				};
 
@@ -252,8 +245,7 @@ describe('ShapiEditFile', () => {
 
 		it('should handle path mode resource locator', async () => {
 			const mockParameters = {
-				shapiUrl: 'http://localhost:3000',
-				filePath: { mode: 'path', value: '/manual/path/file.txt' },
+								filePath: { mode: 'path', value: '/manual/path/file.txt' },
 				displayEnv: ''
 			};
 

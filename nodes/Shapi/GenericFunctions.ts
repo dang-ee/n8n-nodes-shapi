@@ -10,11 +10,13 @@ import {
 export async function shapiApiRequest(
 	this: IExecuteFunctions | ILoadOptionsFunctions,
 	method: IHttpRequestMethods,
-	shapiUrl: string,
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
 ): Promise<any> {
+	const credentials = await this.getCredentials('shapiApi');
+	const shapiUrl = credentials.shapiUrl as string;
+
 	const options: IRequestOptions = {
 		method,
 		body,
@@ -31,4 +33,11 @@ export async function shapiApiRequest(
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error as any);
 	}
+}
+
+export async function getShapiUrl(
+	context: IExecuteFunctions | ILoadOptionsFunctions,
+): Promise<string> {
+	const credentials = await context.getCredentials('shapiApi');
+	return credentials.shapiUrl as string;
 }

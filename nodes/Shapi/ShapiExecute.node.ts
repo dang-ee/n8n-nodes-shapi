@@ -21,16 +21,13 @@ export class ShapiExecute implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
-		properties: [
+		credentials: [
 			{
-				displayName: 'SHAPI URL',
-				name: 'shapiUrl',
-				type: 'string',
-				default: '',
-				placeholder: 'http://localhost:3000',
-				description: 'The SHAPI server URL',
+				name: 'shapiApi',
 				required: true,
 			},
+		],
+		properties: [
 			{
 				displayName: 'Shell Commands',
 				name: 'commands',
@@ -60,7 +57,6 @@ export class ShapiExecute implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const shapiUrl = this.getNodeParameter('shapiUrl', i) as string;
 				const commands = this.getNodeParameter('commands', i) as string;
 				const timeout = this.getNodeParameter('timeout', i) as number;
 				
@@ -72,7 +68,7 @@ export class ShapiExecute implements INodeType {
 					timeout: timeout,
 				};
 
-				const responseData = await shapiApiRequest.call(this, 'POST', shapiUrl, '/execute', body);
+				const responseData = await shapiApiRequest.call(this, 'POST', '/execute', body);
 
 				returnData.push({
 					json: responseData,

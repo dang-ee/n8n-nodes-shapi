@@ -38,6 +38,9 @@
       "dist/nodes/Shapi/ShapiOpenInGvim.node.js",
       "dist/nodes/Shapi/ShapiWaitFileCreated.node.js",
       "dist/nodes/Shapi/ShapiWaitFileUpdated.node.js"
+    ],
+    "credentials": [
+      "dist/credentials/ShapiApi.credentials.js"
     ]
   },
   "devDependencies": {

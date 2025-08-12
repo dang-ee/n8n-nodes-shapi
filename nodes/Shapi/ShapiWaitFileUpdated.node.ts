@@ -21,16 +21,13 @@ export class ShapiWaitFileUpdated implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
-		properties: [
+		credentials: [
 			{
-				displayName: 'SHAPI URL',
-				name: 'shapiUrl',
-				type: 'string',
-				default: '',
-				placeholder: 'http://localhost:3000',
-				description: 'The SHAPI server URL',
+				name: 'shapiApi',
 				required: true,
 			},
+		],
+		properties: [
 			{
 				displayName: 'File Path',
 				name: 'filePath',
@@ -57,7 +54,6 @@ export class ShapiWaitFileUpdated implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const shapiUrl = this.getNodeParameter('shapiUrl', i) as string;
 				const filePath = this.getNodeParameter('filePath', i) as string;
 				const timeout = this.getNodeParameter('timeout', i) as number;
 
@@ -66,7 +62,7 @@ export class ShapiWaitFileUpdated implements INodeType {
 					timeout: timeout,
 				};
 
-				const responseData = await shapiApiRequest.call(this, 'POST', shapiUrl, '/wait_file_updated', body);
+				const responseData = await shapiApiRequest.call(this, 'POST', '/wait_file_updated', body);
 
 				returnData.push({
 					json: responseData,
