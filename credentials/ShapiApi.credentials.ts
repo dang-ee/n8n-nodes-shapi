@@ -14,7 +14,7 @@ export class ShapiApi implements ICredentialType {
 			displayName: 'SHAPI URL',
 			name: 'shapiUrl',
 			type: 'string',
-			default: 'http://localhost:3000',
+			default: '',
 			placeholder: 'http://localhost:3000',
 			description: 'The SHAPI server URL',
 			required: true,
@@ -29,7 +29,7 @@ export class ShapiApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.shapiUrl}}',
-			url: '/health',
+			url: '/status',
 			method: 'GET',
 		},
 	};
